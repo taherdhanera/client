@@ -15,7 +15,8 @@ export function getTPSLPriceFromMovePercent(entryPrice, movePercent, isLong, isP
 	if (entryPrice <= 0 || movePercent <= 0) return 0;
 
 	const direction = isProfitTarget === isLong ? 1 : -1;
-	return entryPrice * (1 + direction * movePercent / 100);
+	const targetPrice = entryPrice * (1 + direction * movePercent / 100);
+	return Number.isFinite(targetPrice) && targetPrice > 0 ? targetPrice : 0;
 }
 
 export function getTPSLPriceFromPercent(entryPrice, pnlPercent, leverage, isLong, isProfitTarget) {

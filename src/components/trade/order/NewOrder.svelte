@@ -232,18 +232,22 @@
 		const entryPrice = getCurrentTPSLEntryPrice();
 		if (tpProfitPercent > 0 && tpPercentInputActive) {
 			const targetPrice = getTPSLPriceFromPercent(entryPrice, tpProfitPercent, $leverage, $isLong, true);
+			tpPrice.set(formatTPSLValue(targetPrice));
+			highlightedTPButton = undefined;
 			if (targetPrice) {
-				tpPrice.set(formatForDisplay(targetPrice));
-				highlightedTPButton = undefined;
 				syncTPMetrics(targetPrice);
+			} else {
+				tpProfitAmount = undefined;
 			}
 		}
 		if (slLossPercent > 0 && slPercentInputActive) {
 			const targetPrice = getTPSLPriceFromPercent(entryPrice, slLossPercent, $leverage, $isLong, false);
+			slPrice.set(formatTPSLValue(targetPrice));
+			highlightedSLButton = undefined;
 			if (targetPrice) {
-				slPrice.set(formatForDisplay(targetPrice));
-				highlightedSLButton = undefined;
 				syncSLMetrics(targetPrice);
+			} else {
+				slLossAmount = undefined;
 			}
 		}
 	}
@@ -252,18 +256,22 @@
 		const entryPrice = getCurrentTPSLEntryPrice();
 		if (tpProfitAmount > 0 && tpAmountInputActive) {
 			const targetPrice = getTPSLPriceFromAmount(entryPrice, tpProfitAmount, $size, $isLong, true);
+			tpPrice.set(formatTPSLValue(targetPrice));
+			highlightedTPButton = undefined;
 			if (targetPrice) {
-				tpPrice.set(formatForDisplay(targetPrice));
-				highlightedTPButton = undefined;
 				syncTPMetrics(targetPrice);
+			} else {
+				tpProfitPercent = undefined;
 			}
 		}
 		if (slLossAmount > 0 && slAmountInputActive) {
 			const targetPrice = getTPSLPriceFromAmount(entryPrice, slLossAmount, $size, $isLong, false);
+			slPrice.set(formatTPSLValue(targetPrice));
+			highlightedSLButton = undefined;
 			if (targetPrice) {
-				slPrice.set(formatForDisplay(targetPrice));
-				highlightedSLButton = undefined;
 				syncSLMetrics(targetPrice);
+			} else {
+				slLossPercent = undefined;
 			}
 		}
 	}

@@ -24,9 +24,13 @@ assert.equal(context.getTPSLPriceFromMovePercent(100, 2, false, false), 102);
 
 assert.equal(context.getTPSLPriceFromPercent(100, 20, 10, true, true), 102);
 assert.equal(context.getTPSLPriceFromPercent(100, 20, 10, false, false), 102);
+assert.equal(context.getTPSLPriceFromPercent(100, 500, 5, true, false), 0);
+assert.equal(context.getTPSLPriceFromPercent(100, 505, 5, true, false), 0);
 
 assert.equal(context.getTPSLPriceFromAmount(100, 2, 100, true, true), 102);
 assert.equal(context.getTPSLPriceFromAmount(100, 2, 100, false, true), 98);
+assert.equal(context.getTPSLPriceFromAmount(100, 100, 100, true, false), 0);
+assert.equal(context.getTPSLPriceFromAmount(100, 101, 100, true, false), 0);
 
 const longTp = context.getTPSLMetricsFromPrice(100, 102, 100, 10, true, true);
 assert.equal(longTp.isValid, true);
