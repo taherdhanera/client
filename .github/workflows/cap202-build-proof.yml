@@ -1,0 +1,43 @@
+name: Exact CAP202 source production build
+on:
+  push:
+    branches: [proof/cap202-build-20261023]
+permissions:
+  contents: read
+concurrency:
+  group: cap202-exact-build-20261023
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.repository == 'taherdhanera/client' && github.event.repository.private == false && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: f3d9fd40c98ac5481d52d21da40801ba619bee0a
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Verify source identity and runtime
+        run: |
+          test "$(git rev-parse HEAD)" = f3d9fd40c98ac5481d52d21da40801ba619bee0a
+          test -z "$(git status --porcelain)"
+          node --version
+          npm --version
+          sha256sum package.json package-lock.json rollup.config.js scripts/check-tpsl-calculations.mjs
+      - name: Install locked dependencies and existing package patch
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
+      - name: Execute calculation regression checks
+        run: npm run test:tpsl
+      - name: Build the complete unmodified production app
+        run: npm run build
+      - name: Verify generated bundle and unchanged tracked source
+        run: |
+          test -s build/bundle.f3d9fd4.js
+          test -s build/bundle.f3d9fd4.css
+          test -s build/index.html
+          grep -F bundle.f3d9fd4.js build/index.html
+          sha256sum build/bundle.f3d9fd4.js build/bundle.f3d9fd4.css build/index.html
+          test -z "$(git status --porcelain)"
